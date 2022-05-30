@@ -17,24 +17,24 @@ enum DATE_FORMAT : String{
 //    10:41:02.112                      --> HH:mm:ss.SSS
 }
 protocol CommonDatePickerDelegate: AnyObject {
-    func getDate(date:String)
+    func getDate(date: Date)
     func cancel()
 }
 
 class CommonDatePicker : NSObject {
     
     private let datePicker = UIDatePicker()
-    private var dateFormate : DATE_FORMAT
     weak var delegate:CommonDatePickerDelegate?
-    
-    init(dateFormate:DATE_FORMAT){
-        self.dateFormate = dateFormate
-    }
-   
-    func showDatePickerWithTextField(txtField:UITextField){
+        
+    public func showDatePickerWithTextField(txtField:UITextField , minimumDate: Date? = Date() , mode: UIDatePicker.Mode? = .dateAndTime){
         //Formate Date
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.datePickerMode = mode!
+        datePicker.minimumDate = minimumDate!
+        if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        } else {
+            // Fallback on earlier versions
+        }
         
         //ToolBar
         let toolbar = UIToolbar();
@@ -50,10 +50,7 @@ class CommonDatePicker : NSObject {
     }
     
     @objc func doneDatePicker(){
-        let formatter = DateFormatter()
-        formatter.dateFormat = dateFormate.rawValue
-        let result = formatter.string(from: datePicker.date)
-        delegate?.getDate(date: result)
+        delegate?.getDate(date:datePicker.date)
     }
     
     @objc func cancelDatePicker(){

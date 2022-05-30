@@ -1,5 +1,6 @@
 import UIKit
 
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var txtFieldDate: UITextField!
@@ -8,15 +9,17 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        commonDatePicker = CommonDatePicker(dateFormate : .Date_Month_Year_Hours_Min)
+        commonDatePicker = CommonDatePicker()
         commonDatePicker.delegate = self
         commonDatePicker.showDatePickerWithTextField(txtField: txtFieldDate)
     }
 }
 
 extension ViewController : CommonDatePickerDelegate{
-    func getDate(date: String) {
-        txtFieldDate.text = date
+    func getDate(date:Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = DATE_FORMAT.Date_Month_Year.rawValue
+        txtFieldDate.text = formatter.string(from: date)
         view.endEditing(true)
     }
     
